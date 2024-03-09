@@ -1,12 +1,11 @@
-"use client";
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import initialData from '@/app/initial-data';
 
 const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
-    const localStorageData = localStorage.getItem('project-data');
+    const localStorageData = typeof localStorage !== 'undefined' ? localStorage.getItem('project-data') : null;
+
 
     useEffect(() => {
         if (localStorageData === undefined || localStorageData === null) {
@@ -14,7 +13,7 @@ export const TaskProvider = ({ children }) => {
         }
     }, []);
 
-    const [db, setDb] = useState(JSON.parse(localStorage.getItem('project-data')) || initialData);
+    const [db, setDb] = useState(localStorageData ? JSON.parse(localStorageData) : initialData)
 
     useEffect(() => {
         localStorage.setItem('project-data', JSON.stringify(db));
