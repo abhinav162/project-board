@@ -117,9 +117,9 @@ function ProjectBoard(props) {
 
             {!isProjectEmpty && (
                 <Fragment>
-                    <div className='ml-5 border-b-2 flex item-center' onMouseEnter={() => setShowBtns(true)} onMouseLeave={() => setShowBtns(false)}>
+                    <div className='ml-5 border-b-2 flex item-center'>
                         <div className=' border-b-2 border-gray-400 w-fit p-2 pb-2'>
-                            <p>{db?.project?.title}</p>
+                            <p onMouseEnter={() => setShowBtns(true)} onMouseLeave={() => setShowBtns(false)}>{db?.project?.title}</p>
                         </div>
                         {showBtns && <button className='p-2 text-gray-600' onClick={() => deleteProject(db?.project?.id)}>
                             <DeleteIcon />
