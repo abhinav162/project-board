@@ -111,7 +111,7 @@ function ProjectBoard(props) {
 
     return (
         <>
-            {isProjectEmpty && <button className='flex justify-center items-center h-full w-full' onClick={createProject}>
+            {isProjectEmpty && <button className='flex justify-center items-center mt-11 h-full w-full' onClick={createProject}>
                 <p className='text-2xl bg-gray-100 p-3 pl-6 pr-6 rounded-md text-center hover:bg-gray-200'>+ Create Project</p>
             </button>}
 
