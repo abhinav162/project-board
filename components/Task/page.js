@@ -83,7 +83,7 @@ const Container = (props) => {
                     {children}
                     {
                         showBtns && (
-                            <div className=' h-min flex rounded bg-gray-100 box-border'>
+                            <div className=' h-min flex rounded bg-gray-100 border  border-gray-300'>
                                 <button
                                     className='text-xs p-1 rounded-s text-gray-600 hover:bg-gray-300'
                                     onClick={() => {

@@ -3,6 +3,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd'
 import Task from '@/components/Task/page'
 import { useTaskContext } from '@/store/TaskContext'
 import DeleteIcon from '@/components/svg/DeleteIcon'
+import EditIcon from '@/components/svg/EditIcon'
 
 function Column(props) {
     const { addTask } = useTaskContext()
@@ -53,7 +54,7 @@ function Column(props) {
 export default Column
 
 const Title = (props) => {
-    const { deleteColumn } = useTaskContext()
+    const { deleteColumn, updateColumn } = useTaskContext()
     const { colId, tbi, children, provided } = props
     const [showBtns, setShowBtns] = useState(false)
 
@@ -78,9 +79,15 @@ const Title = (props) => {
             </h3>
             <p className='text-sm text-gray-400'>{children[2]}</p>
 
-            {showBtns && <div className=' ml-auto text-gray-600 rounded p-1 hover:bg-gray-300' onClick={() => deleteColumn(colId)}>
-                <DeleteIcon />
-            </div>}
+            {showBtns &&
+                <div className=' flex items-center ml-auto text-gray-600 rounded bg-gray-100 border border-gray-300'>
+                    <button className='text-xs p-1 rounded-s text-gray-600 hover:bg-gray-300' onClick={() => updateColumn(colId)}>
+                        <EditIcon />
+                    </button>
+                    <button className='text-xs p-1 rounded-e border-s border-gray-300 text-gray-600 hover:bg-gray-300' onClick={() => deleteColumn(colId)}>
+                        <DeleteIcon />
+                    </button>
+                </div>}
         </div>
     )
 }

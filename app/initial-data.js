@@ -36,10 +36,12 @@
 // };
 
 const initialData = {
+    project: {
+    },
     tasks: {
     },
     columns: {
-        
+
     },
     columnOrder: []
 };

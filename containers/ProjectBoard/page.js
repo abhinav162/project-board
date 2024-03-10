@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import Column from '@/containers/Column/page';
 import { useTaskContext } from '@/store/TaskContext';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import DeleteIcon from '@/components/svg/DeleteIcon';
 
 function ProjectBoard(props) {
-    const { db, addColumn, updateDb, isBoardEmpty } = useTaskContext()
+    const { db, addColumn, updateDb, isBoardEmpty, createProject, isProjectEmpty, deleteProject } = useTaskContext()
 
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState({})
+    const [showBtns, setShowBtns] = useState(true)
 
     useEffect(() => {
         if (db) {
@@ -15,8 +17,6 @@ function ProjectBoard(props) {
             setLoading(false)
         }
     }, [db])
-
-    console.log(data)   
 
     const handleAddColumn = () => {
         let newColumnTitle = prompt('Enter column title')
@@ -110,32 +110,50 @@ function ProjectBoard(props) {
     }
 
     return (
-        <DragDropContext
-            onDragEnd={onDragEnd}
-        >
-            {loading && <h1>Loading...</h1>}
-            {(!loading && !isBoardEmpty) && <Droppable droppableId='all-clm' direction='horizontal' type='column'>
-                {(provided) => (
-                    <Container
-                        data={data}
-                        setData={setData}
-                        innerRef={provided.innerRef}
-                        provided={provided}
-                        handleAddColumn={handleAddColumn}
+        <>
+            {isProjectEmpty && <button className='flex justify-center items-center h-full w-full' onClick={createProject}>
+                <p className='text-2xl bg-gray-100 p-3 pl-6 pr-6 rounded-md text-center hover:bg-gray-200'>+ Create Project</p>
+            </button>}
+
+            {!isProjectEmpty && (
+                <Fragment>
+                    <div className='ml-5 border-b-2 flex item-center' onMouseEnter={() => setShowBtns(true)} onMouseLeave={() => setShowBtns(false)}>
+                        <div className=' border-b-2 border-gray-400 w-fit p-2 pb-2'>
+                            <p>{db?.project?.title}</p>
+                        </div>
+                        {showBtns && <button className='p-2 text-gray-600' onClick={() => deleteProject(db?.project?.id)}>
+                            <DeleteIcon />
+                        </button>}
+                    </div>
+                    <DragDropContext
+                        onDragEnd={onDragEnd}
                     >
-                        {provided.placeholder}
-                    </Container>
-                )}
-            </Droppable>}
-            {
-                (!loading && isBoardEmpty) && <button
-                    className='flex justify-center items-center h-full w-full'
-                    onClick={handleAddColumn}
-                >
-                    <h1 className='text-2xl bg-gray-100 p-3 pl-6 pr-6 rounded-md text-center hover:bg-gray-200'>+ Create Project Board</h1>
-                </button>
-            }
-        </DragDropContext>
+                        {loading && <h1>Loading...</h1>}
+                        {(!loading && !isBoardEmpty) && <Droppable droppableId='all-clm' direction='horizontal' type='column'>
+                            {(provided) => (
+                                <Container
+                                    data={data}
+                                    setData={setData}
+                                    innerRef={provided.innerRef}
+                                    provided={provided}
+                                    handleAddColumn={handleAddColumn}
+                                >
+                                    {provided.placeholder}
+                                </Container>
+                            )}
+                        </Droppable>}
+                    </DragDropContext>
+                    {
+                        (!loading && isBoardEmpty) && <button
+                            className='flex justify-center items-center h-full w-full'
+                            onClick={handleAddColumn}
+                        >
+                            <h1 className='text-xl bg-gray-100 mt-5 p-3 pl-6 pr-6 rounded-md text-center hover:bg-gray-200'>+ Add Task Category</h1>
+                        </button>
+                    }
+                </Fragment>
+            )}
+        </>
     )
 }
 

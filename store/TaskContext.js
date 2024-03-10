@@ -3,6 +3,20 @@ import initialData from '@/app/initial-data';
 
 const TaskContext = createContext();
 
+// const initialData = {
+//     project: {
+//         id: '',
+//         title: '',
+//     },
+//     tasks: {
+//     },
+//     columns: {
+
+//     },
+//     columnOrder: []
+// };
+
+
 export const TaskProvider = ({ children }) => {
     const localStorageData = typeof localStorage !== 'undefined' ? localStorage.getItem('project-data') : null;
 
@@ -21,6 +35,46 @@ export const TaskProvider = ({ children }) => {
 
     const checkIfEmpty = () => {
         return Object.keys(db.columns).length === 0;
+    }
+
+    const isProjectEmpty = () => {
+        return db.project === undefined || Object.keys(db.project).length === 0;
+    }
+
+    const createProject = () => {
+        let title = prompt('Enter Project Name');
+        let newProjectID = ""
+
+        if (isProjectEmpty()) {
+            newProjectID = `project-1`;
+        }
+        else {
+            newProjectID = `project-${Object.keys(db.project).length + 1}`;
+        }
+
+        let newProject = {
+            id: newProjectID,
+            title: title
+        };
+
+        let newDb = {
+            ...db,
+            project: newProject
+        };
+
+        setDb(newDb);
+    }
+
+    const deleteProject = (projectId) => {
+        let newDb = {
+            ...db,
+            project: {},
+            tasks: {},
+            columns: {},
+            columnOrder: []
+        };
+
+        setDb(newDb);
     }
 
     const addColumn = (title) => {
@@ -77,6 +131,24 @@ export const TaskProvider = ({ children }) => {
         updateDb(newDb);
     }
 
+    const updateColumn = (columnId) => {
+        let newTitle = prompt('Enter new title for column');
+        if (newTitle) {
+            let newDb = {
+                ...db,
+                columns: {
+                    ...db.columns,
+                    [columnId]: {
+                        ...db.columns[columnId],
+                        title: newTitle
+                    }
+                }
+            };
+
+            updateDb(newDb);
+        }
+    }
+
     const deleteTask = (taskId, columnId) => {
         let newColumn = db.columns[columnId];
         newColumn.taskIds = newColumn.taskIds.filter(id => id !== taskId);
@@ -112,7 +184,7 @@ export const TaskProvider = ({ children }) => {
     }
 
     return (
-        <TaskContext.Provider value={{ db, addTask, addColumn, isBoardEmpty: checkIfEmpty(), updateDb, updateTask, deleteTask, deleteColumn }}>
+        <TaskContext.Provider value={{ db, addTask, addColumn, isBoardEmpty: checkIfEmpty(), updateDb, updateTask, deleteTask, deleteColumn, updateColumn, createProject, isProjectEmpty: isProjectEmpty(), deleteProject }}>
             {children}
         </TaskContext.Provider>
     );
